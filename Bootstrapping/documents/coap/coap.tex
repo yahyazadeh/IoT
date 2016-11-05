@@ -57,7 +57,7 @@
 \end{itemize}
 \end{frame}
 %------------------------------------------------------------------------------
-\begin{frame}
+\begin{frame}{CoAP layers}
 \begin{itemize}
 \item[•] Abstract Layering of CoAP
 \end{itemize}
@@ -71,6 +71,130 @@
     \cline{1-0}
   \end{tabular}
 \end{center}
+\begin{itemize}
+\item[•] One could think of CoAP logically as using a two-layer approach, a CoAP messaging layer used to deal with UDP and the asynchronous nature of the interactions, and the request/response interactions using Method and Response Codes
+\item[•] CoAP is however a single protocol, with messaging and request/response as just features
+   of the CoAP header.
+\end{itemize}
+\end{frame}
+%------------------------------------------------------------------------------
+\begin{frame}{Messaging model}
+\begin{itemize}
+\item[•] Message types
+\begin{itemize}
+\item[•] Confirmable
+\item[•] Non-confirmable
+\item[•] Acknowledgement
+\item[•] Reset
+\end{itemize}
+\item[•] Method Codes and Response Codes included in some of these messages make them carry requests or responses
+\item[•] The basic exchanges of the four types of messages are somewhat orthogonal to the request/response interactions; requests can be carried in Confirmable and Non-confirmable messages, and responses can be carried in these as well as piggybacked in Acknowledgement messages
+\begin{itemize}
+\item[•] Thus, Requests cannot be carried in Ack messages
+\end{itemize}
+\end{itemize}
+\end{frame}
+%------------------------------------------------------------------------------
+\begin{frame}{Message format}
+\begin{itemize}
+\item[•] CoAP is based on the exchange of compact messages
+\begin{itemize}
+\item[•] transported over UDP $\rightarrow$ each CoAP message occupies the data section of one UDP datagram
+\item[•] may also be used over Datagram Transport Layer Security (DTLS)
+\item[•] It could also be used over other transports such as SMS, TCP, or SCTP
+\item[•] UDP-lite [RFC3828] and UDP zero checksum [RFC6936] are not supported by CoAP
+\end{itemize}
+\end{itemize}
+\end{frame}
+%------------------------------------------------------------------------------
+\begin{frame}{Message format (Cont...)}
+\begin{itemize}
+\item[•] messages are encoded in a simple binary format
+\item[•] message structure
+\begin{itemize}
+\item[•] header
+\item[•] token (if any)
+\item[•] options (if any)
+\item[•] payload marker (if there is any payload)
+\item[•] payload (if any)
+\end{itemize}
+\end{itemize}
+\begin{center}
+  \begin{tabular}{*{32}{c}}
+    \hline
+    \multicolumn{2}{|c|}{{\scriptsize Ver}} & \multicolumn{2}{|c|}{\scriptsize T} & \multicolumn{4}{|c|}{\scriptsize TKL} & \multicolumn{8}{|c|}{\scriptsize Code} & \multicolumn{16}{|c|}{\scriptsize Message ID} \\ \hline
+    \multicolumn{32}{|l}{\scriptsize Token (if any, TKL bytes) ...} \\ \hline
+    \multicolumn{32}{|l}{\scriptsize Options (if any) ...} \\ \hline
+    \multicolumn{8}{|c|}{\scriptsize 11111111} & \multicolumn{24}{|l}{\scriptsize Payload (if any) ...} \\ \hline 
+  \end{tabular}
+\end{center}
+\end{frame}
+%------------------------------------------------------------------------------
+\begin{frame}{Message format - Header}
+\begin{itemize}
+\item[•] header (fixed-size 4-byte)
+\begin{itemize}
+\item[•] Version (Ver):  2-bit unsigned integer
+\begin{itemize}
+\item[•] CoAP version number
+\item[•] Implementations of this specification MUST set this field to 1 (01 binary).  Other values are reserved for future versions. Messages with unknown version numbers MUST be silently ignored
+\end{itemize}
+\item[•] Type (T):  2-bit unsigned integer
+\begin{itemize}
+\item[•] Indicates if this message is of type Confirmable (0), Non-confirmable (1), Acknowledgement (2), or Reset (3)
+\end{itemize}
+\item[•] Token Length (TKL):  4-bit unsigned integer
+\begin{itemize}
+\item[•] Indicates the length of the variable-length Token field (0-8 bytes)
+\item[•] Lengths 9-15 are reserved, MUST NOT be sent, and MUST be processed as a message format error
+\end{itemize}
+\end{itemize}
+\end{itemize}
+\end{frame}
+%------------------------------------------------------------------------------
+\begin{frame}{Message format - Header (Cont...)}
+\begin{itemize}
+\item[•] header (fixed-size 4-byte) (Cont...)
+\begin{itemize}
+\item[•] Code:  8-bit unsigned integer
+\begin{itemize}
+\item[•] split into a 3-bit class (most significant bits) and a 5-bit detail (least significant bits)
+\item[•] documented as "c.dd". "c" is a digit from 0 to 7 for the 3-bit subfield and "dd" are two digits from 00 to 31 for the 5-bit subfield. 
+\item[•] The class can indicate a request (0), a success response (2), a client error response (4), or a server error response (5).  (All other class values are reserved.)
+\item[•] As a special case, Code 0.00 indicates an Empty message.
+\item[•] In case of a request, the Code field indicates the Request Method; in case of a response, a Response Code.
+\end{itemize}
+\item[•] Message ID:  16-bit unsigned integer
+\end{itemize}
+\end{itemize}
+\end{frame}
+%------------------------------------------------------------------------------
+\begin{frame}{Message format - Header (Cont...)}
+\begin{itemize}
+\item[•] header (fixed-size 4-byte) (Cont...)
+\begin{itemize}
+\item[•] Message ID:  16-bit unsigned integer
+\begin{itemize}
+\item[•] split into a 3-bit class (most significant bits) and a 5-bit detail (least significant bits)
+\item[•] documented as "c.dd". "c" is a digit from 0 to 7 for the 3-bit subfield and "dd" are two digits from 00 to 31 for the 5-bit subfield. 
+\item[•] The class can indicate a request (0), a success response (2), a client error response (4), or a server error response (5).  (All other class values are reserved.)
+\item[•] As a special case, Code 0.00 indicates an Empty message.
+\item[•] In case of a request, the Code field indicates the Request Method; in case of a response, a Response Code.
+\end{itemize}
+\end{itemize}
+\end{itemize}
+\end{frame}
+%------------------------------------------------------------------------------
+\begin{frame}{Rules for generating a Message ID and matching messages}
+
+\end{frame}
+%------------------------------------------------------------------------------
+\begin{frame}{Code registries}
+
+\end{frame}
+%------------------------------------------------------------------------------
+\begin{frame}{Request/Response Semantics}
+
 \end{frame}
 %------------------------------------------------------------------------------
 \end{document}
