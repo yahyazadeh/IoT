@@ -4,6 +4,7 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
+\usepackage{multirow}
 \author{Moosa Yahyazadeh}
 \title{The Constrained Application Protocol (CoAP)}
 %\setbeamercovered{transparent} 
@@ -22,19 +23,54 @@
 %\tableofcontents
 %\end{frame}
 %------------------------------------------------------------------------------
-\begin{frame}{What is coap?}
+\begin{frame}{What is CoAP?}
 \begin{itemize}
-\item[•] The Constrained Application Protocol (CoAP) is a specialized web transfer protocol for use with constrained nodes and constrained (e.g., low-power, lossy) networks.
+\item[•] The Constrained Application Protocol (CoAP) is a specialized web transfer protocol for use with constrained nodes and constrained (e.g., low-power, lossy) networks
 \item[•] The protocol is designed for machine-to-machine (M2M) applications
 \begin{itemize}
 \item[•] smart energy
 \item[•] building automation
 \end{itemize}
 \item[•] It provides a request/response interaction model between application endpoints
+\begin{itemize}
+\item[•] One design goal $\rightarrow$ keep message overhead small
+\begin{itemize}
+\item[•] Why? limiting the need for fragmentation in constrained environments
+\end{itemize}
+\end{itemize}
+\end{itemize}
+\end{frame}
+%------------------------------------------------------------------------------
+\begin{frame}{Request/response interaction model}
+\begin{itemize}
+\item[•] Interaction model of CoAP is similar to the client/server model of HTTP
+\item[•] Machine-to-Machine interaction result in CoAP implementation acting in both client and server roles
+\item[•] CoAP request/response
+\begin{itemize}
+\item[•] a request is sent by a client for an action (using a Method Code) on a resource (identified by a URI) on a server
+\item[•] server then sends a response with a Response Code; this response may include a resource representation
+\end{itemize}
+\item[•] Unlike HTTP, CoAP deals with these interchanges asynchronously over a datagram-oriented transport such as UDP.
+\begin{itemize}
+\item[•] using messages layer that supports optional reliability
+\end{itemize}
 \end{itemize}
 \end{frame}
 %------------------------------------------------------------------------------
 \begin{frame}
+\begin{itemize}
+\item[•] Abstract Layering of CoAP
+\end{itemize}
+\begin{center}
+  \begin{tabular}{ | c | c }
+    \cline{1-0}
+    Application &  \\ \cline{1-0} \hline
+    Requests/Responses & \multirow{2}{*}{CoAP}  \\ \cline{1-0} 
+    Messages &  \\ \cline{1-0} \hline
+    UDP &  \\
+    \cline{1-0}
+  \end{tabular}
+\end{center}
 \end{frame}
 %------------------------------------------------------------------------------
 \end{document}
