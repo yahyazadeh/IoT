@@ -122,12 +122,50 @@
 \item[•] Notice: Token is a concept separate from the Message ID
 \end{itemize}
 \end{itemize}
-\item[•] A request is carried in a Confirmable (CON) or Non-confirmable (NON) message
+\item[•] Scenario: A request is carried in a Confirmable (CON) 
 \begin{itemize}
 \item[•] If immediately available, the response to a request carried in a Confirmable message is carried in the resulting (ACK) message
 \begin{itemize}
-\item[•] Called a piggybacked response
+\item[•] Called a piggybacked response; same Msg ID, same Token
 \item[•] No need for separately acknowledging a piggybacked response, as the client will retransmit the request if the (ACK) message carrying the piggybacked response is lost
+\end{itemize}
+\end{itemize}
+\end{itemize}
+\end{frame}
+%------------------------------------------------------------------------------
+\begin{frame}{Request/response model (Cont...)}
+\begin{itemize}
+\item[•] Scenario: A request is carried in a (CON) and the server is not able to respond immediately (with Pigg. Res.)
+\begin{itemize}
+\item[•] It simply responds with an Empty Ack message so that the client can stop retransmitting the request
+\item[•] When the response is ready, the server sends it in a new Confirmable message (which then in turn needs to be acknowledged by the client)
+\begin{itemize}
+\item[•] called a "separate response"
+\item[•] different Msg ID, same Token
+\end{itemize}
+\end{itemize}
+\item[•] Scenario: A request is carried in a Non-confirmable (NON)
+\begin{itemize}
+\item[•] the response is sent using a new Non-confirmable message, although the server may instead send a Confirmable message
+\begin{itemize}
+\item[•] The response $\rightarrow$ different Msg ID, same Token
+\end{itemize}
+\end{itemize}
+\end{itemize}
+\end{frame}
+%------------------------------------------------------------------------------
+\begin{frame}{Request/response model (Cont...)}
+\begin{itemize}
+\item[•] Methods in CoAP:
+\begin{itemize}
+\item[•] GET, PUT, POST, and DELETE
+\begin{itemize}
+\item[•] Similar manner to HTTP, but there are some differences
+\end{itemize}
+\item[•] Methods beyond the basic four can be added to CoAP in separate specifications
+\begin{itemize}
+\item[•] New methods do not necessarily have to use requests and responses in pairs
+\item[•] Even for existing methods, a single request may yield multiple responses, e.g., for a multicast request or with the Observe option
 \end{itemize}
 \end{itemize}
 \end{itemize}
@@ -175,7 +213,7 @@
 \item[•] Version (Ver):  2-bit unsigned integer
 \begin{itemize}
 \item[•] CoAP version number
-\item[•] Implementations of this specification MUST set this field to 1 (01 binary).  Other values are reserved for future versions. Messages with unknown version numbers MUST be silently ignored
+\item[•] Implementations of this specification \textbf{MUST} set this field to 1 (01 binary).  Other values are reserved for future versions. Messages with unknown version numbers \textbf{MUST} be silently ignored
 \end{itemize}
 \item[•] Type (T):  2-bit unsigned integer
 \begin{itemize}
