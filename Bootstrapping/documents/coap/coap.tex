@@ -171,6 +171,36 @@
 \end{itemize}
 \end{frame}
 %------------------------------------------------------------------------------
+\begin{frame}{Request/Response Semantics}
+\begin{itemize}
+\item[•] CoAP operates under a similar request/response model as HTTP
+\begin{itemize}
+\item[•] a CoAP endpoint in the role of a "client" sends one or more CoAP requests to a "server", which services the requests by sending CoAP responses
+\end{itemize}
+\item[•] Unlike HTTP, requests and responses are not sent over a previously established connection but are exchanged \textbf{asynchronously} over CoAP messages
+\end{itemize}
+\end{frame}
+%------------------------------------------------------------------------------
+\begin{frame}{Request/Response Semantics (Cont...)}
+\begin{itemize}
+\item[•] Request contains:
+\begin{itemize}
+\item[•] a method to be applied to the resource
+\item[•] the identifier of the resource
+\item[•] a payload and Internet media type (if any)
+\item[•] and optional metadata about the request
+\end{itemize}
+\item[•] Response
+\begin{itemize}
+\item[•] After receiving and interpreting a request, a server responds with a CoAP response that is matched to the request by means of a client-generated token; note that this is different from the Message ID that matches a Confirmable message to its Acknowledgement.
+\item[•] can be sent as Piggybacked, Separate (resource not available at that time or non-confirmable req)
+\begin{itemize}
+\item[•] Implementation Note:  The protocol leaves the decision whether to piggyback a response or not (i.e., send a separate response) to the server. If possible piggyback is better. The client MUST be prepared to receive either. 
+\end{itemize}
+\end{itemize}
+\end{itemize}
+\end{frame}
+%------------------------------------------------------------------------------
 \begin{frame}{Message format}
 \begin{itemize}
 \item[•] CoAP is based on the exchange of compact messages
@@ -294,15 +324,17 @@
 \begin{itemize}
 \item[•] 2.01 $\rightarrow$ Created, 2.02 $\rightarrow$ Deleted, 2.03 $\rightarrow$ Valid, 2.04 $\rightarrow$ Changed, 2.05 $\rightarrow$ Content
 \item[•] 4.00 $\rightarrow$ Bad Request, 4.01 $\rightarrow$ Unauthorized, 4.02 $\rightarrow$ Bad Option, 4.03 $\rightarrow$ Forbidden, 4.04 $\rightarrow$ Not Found, 4.05 $\rightarrow$ Method Not Allowed, 4.06 $\rightarrow$ Not Acceptable, 4.12 $\rightarrow$ Precondition Failed, 4.13 $\rightarrow$ Request Entity Too Large, 4.15 $\rightarrow$ Unsupported Content-Format
+\begin{itemize}
+\item[•] All other codes of the class should be treated as the generic response code of the class (4.00)
+\end{itemize}
 \item[•] 5.00 $\rightarrow$ Internal Server Error, 5.01 $\rightarrow$ Not Implemented, 5.02 $\rightarrow$ Bad Gateway, 5.03 $\rightarrow$ Service Unavailable, 5.04 $\rightarrow$ Gateway Timeout, 5.05 $\rightarrow$ Proxying Not Supported
+\begin{itemize}
+\item[•] All other codes of the class should be treated as the generic response code of the class (5.00)
+\end{itemize}
 \item[•] The Response Codes 3.00-3.31 are Reserved for future use
 \item[•] All other Response Codes are Unassigned
 \end{itemize}
 \end{itemize}
-\end{frame}
-%------------------------------------------------------------------------------
-\begin{frame}{Request/Response Semantics}
-
 \end{frame}
 %------------------------------------------------------------------------------
 \begin{frame}{Multicast CoAP}
