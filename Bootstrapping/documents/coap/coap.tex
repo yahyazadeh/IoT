@@ -221,8 +221,8 @@
 \end{itemize}
 \item[•] Token Length (TKL):  4-bit unsigned integer
 \begin{itemize}
-\item[•] Indicates the length of the variable-length Token field (0-8 bytes)
-\item[•] Lengths 9-15 are reserved, MUST NOT be sent, and MUST be processed as a message format error
+\item[•] Indicates the length of the variable-length Token field \textbf{(0-8 bytes)}
+\item[•] Lengths \textbf{9-15} are reserved, \textbf{MUST NOT} be sent, and \textbf{MUST} be processed as a \textbf{message format error}
 \end{itemize}
 \end{itemize}
 \end{itemize}
@@ -238,7 +238,8 @@
 \item[•] documented as "c.dd". "c" is a digit from 0 to 7 for the 3-bit subfield and "dd" are two digits from 00 to 31 for the 5-bit subfield. 
 \item[•] The class can indicate a request (0), a success response (2), a client error response (4), or a server error response (5).  (All other class values are reserved.)
 \item[•] As a special case, Code 0.00 indicates an Empty message.
-\item[•] In case of a request, the Code field indicates the Request Method; in case of a response, a Response Code.
+\item[•] In case of a \textbf{request} (Class=0), the Code field indicates the \textbf{Request Method}
+\item[•] In case of a \textbf{response} (Class $\in \left\lbrace  2,4,5 \right\rbrace $), the Code field indicates a \textbf{Response Code}.
 \end{itemize}
 \end{itemize}
 \end{itemize}
@@ -268,7 +269,36 @@
 \end{frame}
 %------------------------------------------------------------------------------
 \begin{frame}{Code registries}
-
+\begin{itemize}
+\item[•] Code ranges:
+\begin{itemize}
+\item[•] 0.00 $\rightarrow$ Indicates an Empty message
+\item[•] 0.01-0.31 $\rightarrow$ Indicates a request
+\begin{itemize}
+\item[•] Initial CoAP Method Codes: 0.01 $\rightarrow$ GET, 0.02 $\rightarrow$ POST, 0.03 $\rightarrow$ PUT, 0.04 $\rightarrow$ DELETE
+\item[•] All other Method Codes are Unassigned
+\end{itemize}
+\item[•] 1.00-1.31 $\rightarrow$ Reserved
+\item[•] 2.00-5.31 $\rightarrow$ Indicates a response
+\begin{itemize}
+\item[•] The Response Codes 3.00-3.31 are Reserved for future use
+\end{itemize}
+\item[•] 6.00-7.31 $\rightarrow$ Reserved
+\end{itemize}
+\end{itemize}
+\end{frame}
+%------------------------------------------------------------------------------
+\begin{frame}{Code registries (Cont...)}
+\begin{itemize}
+\item[•] Response codes
+\begin{itemize}
+\item[•] 2.01 $\rightarrow$ Created, 2.02 $\rightarrow$ Deleted, 2.03 $\rightarrow$ Valid, 2.04 $\rightarrow$ Changed, 2.05 $\rightarrow$ Content
+\item[•] 4.00 $\rightarrow$ Bad Request, 4.01 $\rightarrow$ Unauthorized, 4.02 $\rightarrow$ Bad Option, 4.03 $\rightarrow$ Forbidden, 4.04 $\rightarrow$ Not Found, 4.05 $\rightarrow$ Method Not Allowed, 4.06 $\rightarrow$ Not Acceptable, 4.12 $\rightarrow$ Precondition Failed, 4.13 $\rightarrow$ Request Entity Too Large, 4.15 $\rightarrow$ Unsupported Content-Format
+\item[•] 5.00 $\rightarrow$ Internal Server Error, 5.01 $\rightarrow$ Not Implemented, 5.02 $\rightarrow$ Bad Gateway, 5.03 $\rightarrow$ Service Unavailable, 5.04 $\rightarrow$ Gateway Timeout, 5.05 $\rightarrow$ Proxying Not Supported
+\item[•] The Response Codes 3.00-3.31 are Reserved for future use
+\item[•] All other Response Codes are Unassigned
+\end{itemize}
+\end{itemize}
 \end{frame}
 %------------------------------------------------------------------------------
 \begin{frame}{Request/Response Semantics}
