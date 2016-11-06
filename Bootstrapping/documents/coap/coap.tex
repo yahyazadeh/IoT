@@ -183,19 +183,67 @@
 %------------------------------------------------------------------------------
 \begin{frame}{Request/Response Semantics (Cont...)}
 \begin{itemize}
-\item[•] Request contains:
+\item[•] Request
+\begin{itemize}
+\item[•] Contains
 \begin{itemize}
 \item[•] a method to be applied to the resource
 \item[•] the identifier of the resource
 \item[•] a payload and Internet media type (if any)
 \item[•] and optional metadata about the request
 \end{itemize}
+\end{itemize}
 \item[•] Response
 \begin{itemize}
 \item[•] After receiving and interpreting a request, a server responds with a CoAP response that is matched to the request by means of a client-generated token; note that this is different from the Message ID that matches a Confirmable message to its Acknowledgement.
-\item[•] can be sent as Piggybacked, Separate (resource not available at that time or non-confirmable req)
+\item[•] can be sent as Piggybacked, Separate 
+\end{itemize}
+\end{itemize}
+\end{frame}
+%------------------------------------------------------------------------------
+\begin{frame}{Request/Response Semantics (Cont...)}
 \begin{itemize}
+\item[•] Piggybacked response
+\begin{itemize}
+\item[•] Response (whether success or failure) is carried directly in the Ack message (request was carried in a Confirmable message)
+\item[•] The protocol leaves the decision whether to piggyback a response or not to the server
+\item[•] The client MUST be prepared to receive either
+\item[•] There is a strong expectation that servers will use piggyback whenever possible
+\begin{itemize}
+\item[•] Saving resources in the network
+\end{itemize}
+\end{itemize}
+\end{itemize}
+\end{frame}
+%------------------------------------------------------------------------------
+\begin{frame}{Request/Response Semantics (Cont...)}
+\begin{itemize}
+\item[•] Separate response
+\begin{itemize}
+\item[•] Whenever that is not possible to return a piggybacked response
+\begin{itemize}
+\item[•] Server might need longer to obtain the representation of the resource requested than it can wait to send back the Ack message (Using a Ack timer), without risking the client repeatedly retransmitting the request message
+\item[•] The response to a request carried in a Non-confirmable message is always sent separately
+\end{itemize}
+\item[•] The sep. res. can be Confirmable or not (server's decision)
 \item[•] Implementation Note:  The protocol leaves the decision whether to piggyback a response or not (i.e., send a separate response) to the server. If possible piggyback is better. The client MUST be prepared to receive either. 
+\end{itemize}
+\end{itemize}
+\end{frame}
+%------------------------------------------------------------------------------
+\begin{frame}{Request/Response Semantics (Cont...)}
+\begin{itemize}
+\item[•] Separate response
+\begin{itemize}
+\item[•] Logic
+\begin{itemize}
+\item[•] It sends the Ack to the Confirmable req as an Empty message
+\item[•] Once it's done, server must not send back the res. in another Ack, even if the client retransmits another identical req.
+\item[•] If a retransmitted request is received (perhaps because the original Ack was delayed), another Empty Ack is sent, and any response MUST be sent as a separate response
+\item[•] If the server then sends a Confirmable response, the client’s Ack to that response MUST also be an Empty message (one that carries neither a request nor a response)
+\item[•] The server MUST stop retransmitting its response on any matching Ack or Reset message
+\item[•] If sep. res. arrived before ack (it may happen in UDP), this also serves as an ack 
+\item[•] It the res won't come within reasonable time, client should back off (better to to set up a timeout that is unrelated to retransmission timers)
 \end{itemize}
 \end{itemize}
 \end{itemize}
@@ -291,11 +339,27 @@
 \end{frame}
 %------------------------------------------------------------------------------
 \begin{frame}{Message format - Token}
-
+\begin{itemize}
+\item[•] Token
+\begin{itemize}
+\item[•] Token value may be 0 to 8 bytes as given by the Token Length field
+\item[•] Used to correlate requests and responses
+\item[•] Every message carries a token, even if it is of zero length
+\item[•] Every request carries a client-generated token that the server MUST echo (without modification) in any resulting response
+\item[•] Intended for use as a client-local identifier for differentiating between concurrent requests; could be called a "request ID"
+\item[•] SHOULD use a nontrivial, randomized token to guard against spoofing of responses (if it doesn't use Transport Layer Security)
+\item[•] An endpoint receiving a token it did not generate MUST treat the token as opaque and make no assumptions about its content or structure.
+\end{itemize}
+\end{itemize}
 \end{frame}
 %------------------------------------------------------------------------------
-\begin{frame}{Rules for generating a Message ID and matching messages}
-
+\begin{frame}{Request/Response Matching Rules}
+\begin{itemize}
+\item[•] The source endpoint of the response MUST be the same as the destination endpoint of the original request.
+\item[•] In a piggybacked response, the Message ID of the Confirmable request and the Acknowledgement MUST match, and the tokens of the response and original request MUST match.  
+\item[•] In a separate response, just the tokens of the response and original request MUST match.
+\item[•] In case a message carrying a response is unexpected (the client is not waiting for a response from the identified endpoint, at the endpoint addressed, and/or with the given token), the response is rejected
+\end{itemize}
 \end{frame}
 %------------------------------------------------------------------------------
 \begin{frame}{Code registries}
