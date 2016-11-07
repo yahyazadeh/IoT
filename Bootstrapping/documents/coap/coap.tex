@@ -360,10 +360,9 @@
 \item[•] There can be zero or more Options
 \item[•] An Option can be followed by the end of the message, by another Option, or by the Payload Marker and the payload
 \item[•] Each option instance specifies the Option Number, the length of the Option Value, and Option Value.
-\item[•] Every request carries a client-generated token that the server MUST echo (without modification) in any resulting response
-\item[•] Intended for use as a client-local identifier for differentiating between concurrent requests; could be called a "request ID"
-\item[•] SHOULD use a nontrivial, randomized token to guard against spoofing of responses (if it doesn't use Transport Layer Security)
-\item[•] An endpoint receiving a token it did not generate MUST treat the token as opaque and make no assumptions about its content or structure.
+\begin{itemize}
+\item[•] Option number is calculated using simply summing the Option Delta values of this and all previous options before it
+\end{itemize}
 \end{itemize}
 \end{itemize}
 \end{frame}
